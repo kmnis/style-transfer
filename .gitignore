@@ -2,6 +2,9 @@ data/
 damo/
 models/
 .DS_Store
+source/stylegan2/pretrained_models/*.pth
+source/stylegan2/pretrained_models/*.pt
+face_generation/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
