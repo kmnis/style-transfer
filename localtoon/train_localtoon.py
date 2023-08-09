@@ -14,7 +14,7 @@ def main(args):
         style = ""
     else:
         style = '-' + style
-    model_id = '/home/jupyter/.cache/modelscope/hub/damo/cv_unet_person-image-cartoon' + style + '_compound-models'
+    model_id = '/mnt/workspace/.cache/modelscope/damo/cv_unet_person-image-cartoon' + style + '_compound-models'
 
     max_steps = 300000
     trainer = CartoonTranslationTrainer(
