@@ -9,6 +9,7 @@ from tensorflow.keras.utils import array_to_img
 from .network import ada_in, get_encoder, get_decoder
 from .loss import get_loss_net
 from .data_loader import data_loader
+from .utils import get_mean_std
 
 EPOCHS = 30
 
@@ -167,12 +168,18 @@ def get_model():
     )
     return model
 
-def train():
-    train_ds, val_ds, test_ds = data_loader()
+def train(model=None, data=None):
+
+    if data is None:
+        train_ds, val_ds, test_ds = data_loader()
+    else:
+        train_ds, val_ds, test_ds = data
+
     optimizer = Adam(learning_rate=1e-5)
     loss_fn = MeanSquaredError()
 
-    model = get_model()
+    if model is None:
+        model = get_model()
     model.compile(optimizer=optimizer, loss_fn=loss_fn)
 
     history = model.fit(
