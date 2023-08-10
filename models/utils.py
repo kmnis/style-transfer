@@ -2,7 +2,6 @@ import tensorflow as tf
 
 # Defining the global variables.
 IMAGE_SIZE = (224, 224)
-BATCH_SIZE = 32
 
 EPOCHS = 30
 AUTOTUNE = tf.data.AUTOTUNE

@@ -6,12 +6,11 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.utils import array_to_img
 
-from network import ada_in, get_encoder, get_decoder
-from loss import get_loss_net
-from data_loader import data_loader
+from .network import ada_in, get_encoder, get_decoder
+from .loss import get_loss_net
+from .data_loader import data_loader
 
 EPOCHS = 30
-
 
 class NeuralStyleTransfer(Model):
     def __init__(self, encoder, decoder, loss_net, style_weight, **kwargs):
@@ -158,11 +157,7 @@ class TrainMonitor(Callback):
             pass
 
 
-def train():
-    train_ds, val_ds, test_ds = data_loader()
-    optimizer = Adam(learning_rate=1e-5)
-    loss_fn = MeanSquaredError()
-
+def get_model():
     encoder = get_encoder()
     loss_net = get_loss_net()
     decoder = get_decoder()
@@ -170,7 +165,14 @@ def train():
     model = NeuralStyleTransfer(
         encoder=encoder, decoder=decoder, loss_net=loss_net, style_weight=4.0
     )
+    return model
 
+def train():
+    train_ds, val_ds, test_ds = data_loader()
+    optimizer = Adam(learning_rate=1e-5)
+    loss_fn = MeanSquaredError()
+
+    model = get_model()
     model.compile(optimizer=optimizer, loss_fn=loss_fn)
 
     history = model.fit(

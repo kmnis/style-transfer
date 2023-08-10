@@ -1,8 +1,9 @@
+import os
 import tensorflow as tf
-from utils import decode_and_resize, IMAGE_SIZE
-
+from .utils import decode_and_resize, IMAGE_SIZE
 
 AUTOTUNE = tf.data.AUTOTUNE
+BATCH_SIZE = 32
 
 
 def create_image_loader(path):
@@ -37,7 +38,7 @@ def create_image_loader(path):
     return train_ds, val_ds, test_ds
 
 
-def data_loader(style_path="data/art_style", content_path="data/ffhq-256/"):
+def data_loader(style_path="../data/art_style", content_path="../data/ffhq-256/"):
     train_style_ds, val_style_ds, test_style_ds = create_image_loader(style_path)
     train_content_ds, val_content_ds, test_content_ds = create_image_loader(content_path)
 

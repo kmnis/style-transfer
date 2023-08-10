@@ -1,6 +1,7 @@
 from tensorflow.keras.applications import VGG19
 from tensorflow.keras import Model
-from utils import IMAGE_SIZE
+from tensorflow.keras.layers import Input
+from .utils import IMAGE_SIZE
 
 
 def get_loss_net():
@@ -12,6 +13,6 @@ def get_loss_net():
     outputs = [vgg19.get_layer(name).output for name in layer_names]
     mini_vgg19 = Model(vgg19.input, outputs)
 
-    inputs = layers.Input([*IMAGE_SIZE, 3])
+    inputs = Input([*IMAGE_SIZE, 3])
     mini_vgg19_out = mini_vgg19(inputs)
     return Model(inputs, mini_vgg19_out, name="loss_net")

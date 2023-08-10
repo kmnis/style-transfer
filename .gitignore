@@ -5,6 +5,7 @@ saved_models/
 source/stylegan2/pretrained_models/*.pth
 source/stylegan2/pretrained_models/*.pt
 face_generation/
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
