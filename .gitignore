@@ -1,6 +1,6 @@
 data/
 damo/
-models/
+saved_models/
 .DS_Store
 source/stylegan2/pretrained_models/*.pth
 source/stylegan2/pretrained_models/*.pt
