@@ -7,30 +7,30 @@ BATCH_SIZE = 32
 
 
 def create_image_loader(path):
-    style_images = os.listdir(path)
-    style_images = [os.path.join(path, p) for p in style_images]
+    images = os.listdir(path)
+    images = [os.path.join(path, p) for p in images]
 
     # split the images in train, val and test
-    total_style_images = len(style_images)
-    train_style = style_images[: int(0.8 * total_style_images)]
-    val_style = style_images[int(0.8 * total_style_images) : int(0.9 * total_style_images)]
-    test_style = style_images[int(0.9 * total_style_images) :]
+    total_images = len(images)
+    train = images[: int(0.8 * total_images)]
+    val = images[int(0.8 * total_images) : int(0.9 * total_images)]
+    test = images[int(0.9 * total_images) :]
 
     # Build the tf.data datasets.
     train_ds = (
-        tf.data.Dataset.from_tensor_slices(train_style)
+        tf.data.Dataset.from_tensor_slices(train)
         .map(decode_and_resize, num_parallel_calls=AUTOTUNE)
         .repeat()
     )
 
     val_ds = (
-        tf.data.Dataset.from_tensor_slices(val_style)
+        tf.data.Dataset.from_tensor_slices(val)
         .map(decode_and_resize, num_parallel_calls=AUTOTUNE)
         .repeat()
     )
 
     test_ds = (
-        tf.data.Dataset.from_tensor_slices(test_style)
+        tf.data.Dataset.from_tensor_slices(test)
         .map(decode_and_resize, num_parallel_calls=AUTOTUNE)
         .repeat()
     )
