@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.metrics import Mean
@@ -9,7 +11,7 @@ from tensorflow.keras.utils import array_to_img
 from .network import ada_in, get_encoder, get_decoder
 from .loss import get_loss_net
 from .data_loader import data_loader
-from .utils import get_mean_std
+from .utils import get_mean_std, get_sample_images
 
 EPOCHS = 30
 
@@ -125,10 +127,17 @@ class NeuralStyleTransfer(Model):
 
 
 class TrainMonitor(Callback):
+
+    def __int__(self, test_style, test_content, save_path):
+        self.test_style = test_style
+        self.test_content = test_content
+        self.save_path = save_path
+
     def on_epoch_end(self, epoch, logs=None):
+
         # Encode the style and content image.
-        test_style_encoded = self.model.encoder(test_style)
-        test_content_encoded = self.model.encoder(test_content)
+        test_style_encoded = self.model.encoder(self.test_style)
+        test_content_encoded = self.model.encoder(self.test_content)
 
         # Compute the AdaIN features.
         test_t = ada_in(style=test_style_encoded, content=test_content_encoded)
@@ -136,15 +145,13 @@ class TrainMonitor(Callback):
 
         # Plot the Style, Content and the NST image.
         fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(20, 5))
-        ax[0].imshow(tf.keras.utils.array_to_img(test_style[0]))
+        ax[0].imshow(array_to_img(self.test_style[0]))
         ax[0].set_title(f"Style: {epoch:03d}")
 
-        ax[1].imshow(tf.keras.utils.array_to_img(test_content[0]))
+        ax[1].imshow(array_to_img(self.test_content[0]))
         ax[1].set_title(f"Content: {epoch:03d}")
 
-        ax[2].imshow(
-            tf.keras.utils.array_to_img(test_reconstructed_image[0])
-        )
+        ax[2].imshow(array_to_img(test_reconstructed_image[0]))
         ax[2].set_title(f"NST: {epoch:03d}")
 
         plt.show()
@@ -152,7 +159,7 @@ class TrainMonitor(Callback):
 
         try:
             img = array_to_img(test_reconstructed_image[0])
-            img.save(f'imgs/{epoch}.png')
+            img.save(f'{save_path}/{epoch}.png')
         except Exception as e:
             print(e)
             pass
@@ -168,12 +175,20 @@ def get_model():
     )
     return model
 
-def train(model=None, data=None):
+
+def save_model(model, save_path="../saved_models/art_style/art_style.keras"):
+    model.save(save_path)
+
+def train(model=None, data=None, callback=None):
 
     if data is None:
         train_ds, val_ds, test_ds = data_loader()
     else:
         train_ds, val_ds, test_ds = data
+
+    if callback is None:
+        test_style, test_content = get_sample_images()
+        callback = TrainMonitor(test_style, test_content)
 
     optimizer = Adam(learning_rate=1e-5)
     loss_fn = MeanSquaredError()
@@ -185,14 +200,16 @@ def train(model=None, data=None):
     history = model.fit(
         train_ds,
         epochs=EPOCHS,
-        steps_per_epoch=1000,
+        # steps_per_epoch=1000,
         validation_data=val_ds,
-        validation_steps=500,
-        callbacks=[TrainMonitor()],
+        # validation_steps=500,
+        callbacks=[callback],
     )
+
+    save_model(model)
 
     return history, model
 
 
 if __name__ == "__main__":
-    history, model = train()
+    train()

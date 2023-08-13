@@ -30,3 +30,13 @@ def decode_and_resize(image_path):
     image = tf.image.convert_image_dtype(image, dtype="float32")
     image = tf.image.resize(image, IMAGE_SIZE)
     return image
+
+
+def get_sample_images():
+    test_style = decode_and_resize("../data/sample/William_Turner_16.jpg")
+    test_content = decode_and_resize("../data/sample/hp2.jpg")
+
+    test_style = tf.expand_dims(test_style, axis=0)
+    test_content = tf.expand_dims(test_content, axis=0)
+
+    return test_style, test_content
