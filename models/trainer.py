@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.metrics import Mean
@@ -12,6 +10,8 @@ from .network import ada_in, get_encoder, get_decoder
 from .loss import get_loss_net
 from .data_loader import data_loader
 from .utils import get_mean_std, get_sample_images
+
+import matplotlib.pyplot as plt
 
 EPOCHS = 30
 
@@ -159,7 +159,7 @@ class TrainMonitor(Callback):
 
         try:
             img = array_to_img(test_reconstructed_image[0])
-            img.save(f'{save_path}/{epoch}.png')
+            img.save(f'{self.save_path}/{epoch}.png')
         except Exception as e:
             print(e)
             pass
