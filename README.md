@@ -2,6 +2,8 @@
 
 An implementation of neural style transfer using Adaptive Instance Normalization (AdaIN) with TensorFlow and PyTorch.
 
+![Style Transfer](data/sample/style-transfer.png)
+
 ## Overview
 
 This project implements a neural style transfer model that applies the style of one image to the content of another image. The implementation uses an encoder-decoder architecture with AdaIN (Adaptive Instance Normalization) to achieve real-time style transfer while preserving the content structure.
